@@ -39,7 +39,7 @@ export default function ProjectsPage() {
                 href={p.href}
                 className="text-sm font-medium text-blue-600 hover:underline"
               >
-                Visit →
+                Visit →    
               </Link>
             </li>
           ))}
