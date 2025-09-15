@@ -1,8 +1,7 @@
 // src/app/api/qrcode/route.ts
 import { NextResponse } from "next/server";
-import QRCode from "qrcode";
+import { toBuffer } from "qrcode";
 
-// Use Node runtime because we return a Buffer
 export const runtime = "nodejs";
 
 // GET /api/qrcode?text=<short-url>&w=512&download=1
@@ -17,7 +16,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Missing text" }, { status: 400 });
     }
 
-    // Basic sanity: only allow absolute http(s) URLs (optional but nice)
+    // Only allow absolute http(s) URLs
     try {
       const u = new URL(text);
       if (u.protocol !== "http:" && u.protocol !== "https:") {
@@ -29,25 +28,29 @@ export async function GET(req: Request) {
 
     const width = Math.min(Math.max(Number(widthParam || 512), 128), 1024);
 
-    const png = await QRCode.toBuffer(text, {
+    // Generate PNG as a Buffer/Uint8Array
+    const bytes = await toBuffer(text, {
       width,
       margin: 1,
       errorCorrectionLevel: "M",
     });
 
+    // ✅ Create a NEW ArrayBuffer and copy bytes — avoids ArrayBufferLike/SharedArrayBuffer unions
+    const ab = new ArrayBuffer(bytes.byteLength);
+    new Uint8Array(ab).set(bytes as Uint8Array); // Buffer is a Uint8Array subclass; cast is safe
+
     const headers = new Headers({
       "Content-Type": "image/png",
-      // Cache for a year; content is deterministic for a given text
       "Cache-Control": "public, max-age=31536000, immutable",
     });
 
     if (download) {
-      // Derive a safe filename
       const fileSafe = text.replace(/[^a-zA-Z0-9_-]+/g, "_").slice(0, 40) || "qr";
       headers.set("Content-Disposition", `attachment; filename="${fileSafe}.png"`);
     }
 
-    return new NextResponse(png, { headers });
+    // Response accepts ArrayBuffer — TS clean
+    return new Response(ab, { headers });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "QR generation failed";
     return NextResponse.json({ error: msg }, { status: 500 });
