@@ -3,11 +3,25 @@ import { posts } from "../data/posts";
 export default function Posts() {
   return (
     <section>
-      <h1 className="text-3xl font-semibold">Posts</h1>
-      <ul className="mt-6 space-y-4">
-        {posts.map((p, idx) => (
+      <h1 className="text-3xl font-semibold mb-4">Posts</h1>
+      <p className="text-gray-700 mb-8">
+        A collection of my thoughts, essays, and notes on product, AI, and life in general.
+      </p>
+
+      <ul className="space-y-6">
+        {posts.map((post, idx) => (
           <li key={idx}>
-            <a href={p.link} className="underline">{p.title}</a> — {p.description}
+            <p className="text-gray-500 text-sm">{post.date}</p>
+            <a
+              href={post.link}
+              className="text-xl font-medium text-blue-600 hover:underline"
+             
+              rel="noopener noreferrer"
+            >
+              {post.title}
+            </a>
+            
+            <p className="mt-1 text-gray-600 text-sm">{post.description}</p>
           </li>
         ))}
       </ul>
