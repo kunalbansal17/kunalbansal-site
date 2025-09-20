@@ -41,8 +41,9 @@ export default function Home() {
 <p className="mt-4 text-gray-700 leading-relaxed">
   More recently, I’ve been building <a href="https://agrikunba.com" target="_blank" className="text-blue-600 hover:underline">Agrikunba</a>, 
   a SaaS platform that leverages AI to support farmers, warehouse operators, cattle traders, and fishermen 
-  through advisory and workflow tools. Alongside, I run <a href="https://dhoorvi.com" target="_blank" className="text-blue-600 hover:underline">Dhoorvi</a>, 
-  a sustainable D2C brand offering eco-friendly, plant-based products.
+  through advisory and workflow tools. It enables smarter decision-making with real-time insights on pricing, logistics, and quality management.
+{/*Alongside, I run <a href="https://dhoorvi.com" target="_blank" className="text-blue-600 hover:underline">Dhoorvi</a>, 
+  a sustainable D2C brand offering eco-friendly, plant-based products.*/}
 </p>
 
 <p className="mt-4 text-gray-700 leading-relaxed">
